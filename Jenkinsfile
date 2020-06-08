@@ -8,5 +8,20 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
+        stage('Build Docker Image') {
+            
+            when{
+                  branch 'master'
+            }
+            steps {
+                echo 'Building docker image'
+                script {
+                    app = docker.build('oluwandy122/train-schedule')
+                    app.inside {
+                        sh 'echo $(curl localhost:8080)'
+                    }
+                }
+            }
+        }
     }
 }
